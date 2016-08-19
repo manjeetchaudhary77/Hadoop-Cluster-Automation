@@ -1,0 +1,21 @@
+There could be a file encoding issue.
+I have encountered file type encoding issues when working on files between different operating systems and editors - 
+in my case particularly between Linux and Windows systems.
+I suggest checking your file's encoding to make sure it is suitable for the target linux environment. 
+
+To demonstrate how file type encoding could be this issue, I copy/pasted your example script into Notepad in Windows 
+then copied it to a linux machine and ran it:
+
+root@mkc77:~/windows> sh ./originalfile             
+./originalfile: line 2: syntax error near unexpected token `$'{\r''
+'/originalfile: line 2: `test() {
+
+In this case, Notepad saved the file with carriage returns and linefeeds, causing the error shown above. 
+The \r indicates a carriage return (Linux systems terminate lines with linefeeds \n only).
+
+On the linux machine, you could test this theory by running the following to strip carriage returns from the file, 
+if they are present:
+
+cat originalfile | tr -d "\r" > newfile
+
+Then try to run the new file sh ./newfile . If this works, the issue was carriage returns as hidden characters. 
